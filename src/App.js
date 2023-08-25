@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Layout from "./Layout";
+import NotFound from "./Layout/NotFound"; // Import the NotFound component
 import "./App.css";
 
 /**
@@ -11,8 +12,12 @@ function App() {
   return (
     <div className="app-routes">
       <Switch>
-        <Route path="/">
+        <Route exact path="/">
           <Layout />
+        </Route>
+        {/* Add a route for any other path */}
+        <Route path="*">
+          <NotFound />
         </Route>
       </Switch>
     </div>
