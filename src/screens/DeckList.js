@@ -1,54 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import Header from "../Layout/Header";
-import { listDecks, deleteDeck } from "../utils/api/index";
+import db from "../data/db.json"; 
 
-function DeckList() {
-  const [decks, setDecks] = useState([]);
+function DeckList({ decks, onDeleteDeck, setSelectedDeckName }) {
+  // Extract the cards array from the db.json data
+  const { cards } = db;
 
-  useEffect(() => {
-    async function loadDecks() {
-      const loadedDecks = await listDecks();
-      setDecks(loadedDecks);
+  // Transform the cards array into arrays for each deck
+  const cardsByDeckId = cards.reduce((acc, card) => {
+    if (!acc[card.deckId]) {
+      acc[card.deckId] = [];
     }
-    loadDecks();
-  }, []);
-
-  const handleDelete = async (deckId) => {
-    if (window.confirm("Are you sure you want to delete this deck?")) {
-      await deleteDeck(deckId);
-      const updatedDecks = decks.filter((deck) => deck.id !== deckId);
-      setDecks(updatedDecks);
-    }
-  };
+    acc[card.deckId].push(card);
+    return acc;
+  }, {});
 
   return (
-    <div>
-      <Header />
-      <h2>Decks</h2>
-      <ul className="list-group">
-        {decks.map((deck) => (
-          <li key={deck.id} className="list-group-item">
-            <div>
-              <h3>{deck.name}</h3>
-              <p>{deck.description}</p>
-              <p>{deck.cards.length} cards</p>
-              <Link to={`/study/${deck.id}`} className="btn btn-primary">
-                Study
-              </Link>{" "}
-              <Link to={`/decks/${deck.id}`} className="btn btn-secondary">
-                View
-              </Link>{" "}
-              <button
-                className="btn btn-danger"
-                onClick={() => handleDelete(deck.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="mt-4">
+      {decks.map((deck) => (
+        <div className="card" key={deck.id}>
+          <div className="card-body">
+            <h5 className="card-title">{deck.name}</h5>
+            {/* Use the length of the array for the number of cards in each deck */}
+            <p className="card-text">{`${cardsByDeckId[deck.id] ? cardsByDeckId[deck.id].length : 0} cards`}</p>
+            <Link
+              to={`/decks/${deck.id}/study`}
+              className="btn btn-primary"
+              onClick={() => setSelectedDeckName(deck.name)} // Set the selected deck name
+            >
+              Study
+            </Link>
+            <Link to={`/decks/${deck.id}`} className="btn btn-secondary">
+              View
+            </Link>
+
+            <button
+              className="btn btn-danger"
+              onClick={() => onDeleteDeck(deck.id)}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,116 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { readDeck, updateDeck } from "../utils/api";
-import Header from "../Layout/Header";
 
-function EditDeck({ decks, setDecks }) {
+function EditDeck() {
   const { deckId } = useParams();
-  const history = useHistory();
-  const [deck, setDeck] = useState({ name: "", description: "" });
+  const [deck, setDeck] = useState(null);
+  const [updatedName, setUpdatedName] = useState("");
+  const [updatedDescription, setUpdatedDescription] = useState("");
 
   useEffect(() => {
-    const abortController = new AbortController();
+    readDeck(deckId).then((fetchedDeck) => {
+      setDeck(fetchedDeck);
 
-    async function loadDeck() {
-      try {
-        const loadedDeck = await readDeck(deckId, abortController.signal);
-        setDeck(loadedDeck);
-      } catch (error) {
-        if (error.name === "AbortError") {
-          console.log("Request aborted.");
-        } else {
-          throw error;
-        }
-      }
-    }
-
-    loadDeck();
-
-    return () => abortController.abort();
+      // Populate input fields with the current data
+      setUpdatedName(fetchedDeck.name);
+      setUpdatedDescription(fetchedDeck.description);
+    });
   }, [deckId]);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setDeck((prevDeck) => ({ ...prevDeck, [name]: value }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const updatedDeck = { ...deck };
-      await updateDeck(updatedDeck);
-      setDecks((prevDecks) =>
-        prevDecks.map((prevDeck) =>
-          prevDeck.id === updatedDeck.id ? updatedDeck : prevDeck
-        )
-      );
-      history.push(`/decks/${deckId}`);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleCancel = () => {
-    history.push(`/decks/${deckId}`);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    updateDeck({ ...deck, name: updatedName, description: updatedDescription }).then(
+      (updatedDeck) => {
+        // Handle the updated deck, e.g., navigate to its view page
+      }
+    );
   };
 
   return (
     <div>
-      <Header />
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <a href="/">Home</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href={`/decks/${deckId}`}>{deck.name}</a>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            Edit Deck
-          </li>
-        </ol>
-      </nav>
-      <h1>Edit Deck</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            name="name"
-            value={deck.name}
-            onChange={handleInputChange}
-            required
-          />
+      {deck && (
+        <div>
+          <h2>Edit Deck</h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Name:</label>
+              <input
+                type="text"
+                value={updatedName}
+                onChange={(e) => setUpdatedName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Description:</label>
+              <textarea
+                value={updatedDescription}
+                onChange={(e) => setUpdatedDescription(e.target.value)}
+              />
+            </div>
+            <button type="submit">Save</button>
+          </form>
         </div>
-        <div className="mb-3">
-          <label htmlFor="description" className="form-label">
-            Description
-          </label>
-          <textarea
-            className="form-control"
-            id="description"
-            name="description"
-            value={deck.description}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Save
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary ml-2"
-          onClick={handleCancel}
-        >
-          Cancel
-        </button>
-      </form>
+      )}
     </div>
   );
 }

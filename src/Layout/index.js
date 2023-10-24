@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Header from "./Header";
 import NotFound from "./NotFound";
-import DeckList from "../screens/DeckList";
 import Deck from "../screens/Deck";
 import CreateDeck from "../screens/CreateDeck";
 import EditDeck from "../screens/EditDeck";
@@ -13,7 +12,7 @@ import Home from "../screens/Home";
 
 function Layout() {
   return (
-    <>
+    <div>
       <Header />
       <div className="container">
         <Switch>
@@ -43,7 +42,7 @@ function Layout() {
           </Route>
         </Switch>
       </div>
-    </>
+      </div>
   );
 }
 
