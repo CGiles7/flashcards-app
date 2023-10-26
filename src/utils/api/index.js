@@ -2,8 +2,9 @@
  * Defines the base URL for the API.
  * The default values is overridden by the `API_BASE_URL` environment variable.
  */
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
-//const API_BASE_URL = process.env.;
+//original one, changed movie_front use
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+//const API_BASE_URL = process.env.REACT_APP_API_URL;
 /**
  * Defines the default headers for these functions to work with `json-server`
  */
