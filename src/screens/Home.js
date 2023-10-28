@@ -1,24 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DeckList from "./DeckList";
+import { listDecks, deleteDeck } from "../utils/api"; // Import the deleteDeck function
 
 function Home() {
-  const [selectedDeck, setSelectedDeck] = useState(null); // Initialize as null
+  const [decks, setDecks] = useState([]);
+  const [deckCards, setDeckCards] = useState([]);
 
-  // The list of decks should be managed within the DeckList component
-  // as it's fetching data from the API.
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    listDecks(abortController.signal)
+      .then((decks) => {
+        setDecks(decks);
+        const allCards = decks.reduce((cards, deck) => cards.concat(deck.cards), []);
+        setDeckCards(allCards);
+      })
+      .catch((error) => console.error("Error fetching decks: " + error.message));
+
+    return () => abortController.abort();
+  }, []);
+
+  // Define the handleDeleteDeck function
+  const handleDeleteDeck = async (deckId) => {
+    if (window.confirm("Are you sure you want to delete this deck?")) {
+      try {
+        // Call the deleteDeck function and update the decks state
+        await deleteDeck(deckId);
+        setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId));
+        const allCards = decks.reduce((cards, deck) => cards.concat(deck.cards), []);
+        setDeckCards(allCards);
+      } catch (error) {
+        console.error("Error deleting deck: " + error.message);
+      }
+    }
+  };
 
   return (
     <div>
       <Link to="/decks/new" className="btn btn-primary">
         Create Deck
       </Link>
-      <DeckList setSelectedDeck={setSelectedDeck} /> {/* Pass setSelectedDeck */}
-      {selectedDeck && (
-        <div className="breadcrumb">
-          Home / {selectedDeck.name} {/* Display the selected deck's name in the breadcrumb */}
-        </div>
-      )}
+      <DeckList decks={decks} deckCards={deckCards} onDeleteDeck={handleDeleteDeck} />
     </div>
   );
 }

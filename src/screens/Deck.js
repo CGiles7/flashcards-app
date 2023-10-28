@@ -5,6 +5,7 @@ import { readDeck } from '../utils/api';
 function Deck({ selectedDeck }) {
   const { deckId } = useParams();
   const [deck, setDeck] = useState(null);
+  const [deckCards, setDeckCards] = useState([]); // Store cards for the selected deck
 
   // Load the deck and its cards
   useEffect(() => {
@@ -12,13 +13,16 @@ function Deck({ selectedDeck }) {
       try {
         const loadedDeck = await readDeck(deckId);
         setDeck(loadedDeck);
+
+        // Filter the cards for the selected deck and store them
+        setDeckCards(selectedDeck ? selectedDeck.cards : []);
       } catch (error) {
         console.log('Error loading deck: ' + error.message);
       }
     }
 
     loadDeck();
-  }, [deckId]);
+  }, [deckId, selectedDeck]);
 
   return (
     <div>

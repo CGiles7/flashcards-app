@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { listDecks } from "../utils/api"; // Import the listDecks function
 
-function DeckList({ onDeleteDeck, setSelectedDeck }) {
+function DeckList({ onDeleteDeck, setSelectedDeck, deckCards }) {
   const [decks, setDecks] = useState([]);
 
   useEffect(() => {
@@ -23,19 +23,20 @@ function DeckList({ onDeleteDeck, setSelectedDeck }) {
         <div className="card" key={deck.id}>
           <div className="card-body">
             <h5 className="card-title">{deck.name}</h5>
-            {/* Use the length of the array for the number of cards in each deck */}
-            <p className="card-text">{deck.cards.length} cards</p>
+            {/* Calculate the number of cards for each deck based on deckCards */}
+            <p className="card-text">
+              {`${deckCards.filter((card) => card.deckId === deck.id).length} cards`}
+            </p>
             <Link
               to={`/decks/${deck.id}/study`}
               className="btn btn-primary"
-              onClick={() => setSelectedDeck(deck)} // Set the selected deck
+              onClick={() => setSelectedDeck(deck)}
             >
               Study
             </Link>
             <Link to={`/decks/${deck.id}`} className="btn btn-secondary">
               View
             </Link>
-
             <button
               className="btn btn-danger"
               onClick={() => onDeleteDeck(deck.id)}
