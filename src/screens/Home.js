@@ -1,35 +1,22 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import DeckList from "./DeckList";
-import data from "../data/db.json";
-
 
 function Home() {
-  const [decks, setDecks] = useState(data.decks);
-  const [selectedDeckName, setSelectedDeckName] = useState(""); // New state variable
+  const [selectedDeck, setSelectedDeck] = useState(null); // Initialize as null
 
-  const handleDeleteDeck = (deckId) => {
-    if (window.confirm("Are you sure you want to delete this deck?")) {
-      // Perform the delete operation if needed
-      // Update the decks state accordingly
-      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId));
-      setSelectedDeckName(""); // Clear the selected deck name
-    }
-  }
+  // The list of decks should be managed within the DeckList component
+  // as it's fetching data from the API.
 
   return (
     <div>
       <Link to="/decks/new" className="btn btn-primary">
         Create Deck
       </Link>
-      <DeckList
-        decks={decks}
-        onDeleteDeck={handleDeleteDeck}
-        setSelectedDeckName={setSelectedDeckName} // Pass the function to update the selected deck name
-      />
-      {selectedDeckName && (
+      <DeckList setSelectedDeck={setSelectedDeck} /> {/* Pass setSelectedDeck */}
+      {selectedDeck && (
         <div className="breadcrumb">
-          Home / {selectedDeckName} {/* Display the selected deck name in the breadcrumb */}
+          Home / {selectedDeck.name} {/* Display the selected deck's name in the breadcrumb */}
         </div>
       )}
     </div>

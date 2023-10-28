@@ -3,8 +3,9 @@
  * The default values is overridden by the `API_BASE_URL` environment variable.
  */
 //original one, changed movie_front use
+
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
-//const API_BASE_URL = process.env.REACT_APP_API_URL;
+//const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; 
 /**
  * Defines the default headers for these functions to work with `json-server`
  */

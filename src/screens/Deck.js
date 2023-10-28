@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { readDeck } from '../utils/api';
 
-function Deck() {
+function Deck({ selectedDeck }) {
   const { deckId } = useParams();
   const [deck, setDeck] = useState(null);
 
@@ -27,9 +27,11 @@ function Deck() {
           <li className="breadcrumb-item">
             <Link to="/">Home</Link>
           </li>
-          <li className="breadcrumb-item">
-            {deck}
-          </li>
+          {selectedDeck && (
+            <li className="breadcrumb-item">
+              {deck.name}
+            </li>
+          )}
         </ol>
       </nav>
     </div>

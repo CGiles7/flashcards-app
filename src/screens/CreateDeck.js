@@ -15,6 +15,11 @@ function CreateDeck() {
     });
   };
 
+  const handleCancel = () => {
+    // Redirect the user to the home page
+    history.push("/");
+  };
+
   return (
     <div>
       <h2>Create Deck</h2>
@@ -30,7 +35,8 @@ function CreateDeck() {
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-        <button type="submit">Create</button>
+        <button type="submit">Submit</button>
+        <button type="button" onClick={handleCancel}>Cancel</button>
       </form>
     </div>
   );

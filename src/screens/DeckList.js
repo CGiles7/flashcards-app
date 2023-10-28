@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import db from "../data/db.json"; 
+import { listDecks } from "../utils/api"; // Import the listDecks function
 
-function DeckList({ decks, onDeleteDeck, setSelectedDeckName }) {
-  // Extract the cards array from the db.json data
-  const { cards } = db;
+function DeckList({ onDeleteDeck, setSelectedDeck }) {
+  const [decks, setDecks] = useState([]);
 
-  // Transform the cards array into arrays for each deck
-  const cardsByDeckId = cards.reduce((acc, card) => {
-    if (!acc[card.deckId]) {
-      acc[card.deckId] = [];
-    }
-    acc[card.deckId].push(card);
-    return acc;
-  }, {});
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    // Fetch the decks from the API
+    listDecks(abortController.signal)
+      .then((decks) => setDecks(decks))
+      .catch((error) => console.error("Error fetching decks: " + error.message));
+
+    // Cleanup the controller when the component unmounts
+    return () => abortController.abort();
+  }, []);
 
   return (
     <div className="mt-4">
@@ -22,11 +24,11 @@ function DeckList({ decks, onDeleteDeck, setSelectedDeckName }) {
           <div className="card-body">
             <h5 className="card-title">{deck.name}</h5>
             {/* Use the length of the array for the number of cards in each deck */}
-            <p className="card-text">{`${cardsByDeckId[deck.id] ? cardsByDeckId[deck.id].length : 0} cards`}</p>
+            <p className="card-text">{deck.cards.length} cards</p>
             <Link
               to={`/decks/${deck.id}/study`}
               className="btn btn-primary"
-              onClick={() => setSelectedDeckName(deck.name)} // Set the selected deck name
+              onClick={() => setSelectedDeck(deck)} // Set the selected deck
             >
               Study
             </Link>
