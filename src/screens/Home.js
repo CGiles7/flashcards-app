@@ -6,6 +6,8 @@ import { listDecks, deleteDeck } from "../utils/api"; // Import the deleteDeck f
 function Home() {
   const [decks, setDecks] = useState([]);
   const [deckCards, setDeckCards] = useState([]);
+  const [selectedDeck, setSelectedDeck] = useState(null);
+
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -41,7 +43,7 @@ function Home() {
       <Link to="/decks/new" className="btn btn-primary">
         Create Deck
       </Link>
-      <DeckList decks={decks} deckCards={deckCards} onDeleteDeck={handleDeleteDeck} />
+      <DeckList decks={decks} deckCards={deckCards} onDeleteDeck={handleDeleteDeck} setSelectedDeck={setSelectedDeck} />
     </div>
   );
 }
