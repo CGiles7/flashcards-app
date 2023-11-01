@@ -22,11 +22,13 @@ function DeckList({ onDeleteDeck, setSelectedDeck, deckCards }) {
       {decks.map((deck) => (
         <div className="card" key={deck.id}>
           <div className="card-body">
-            <h5 className="card-title">{deck.name}</h5>
-            {/* Calculate the number of cards for each deck based on deckCards */}
-            <p className="card-text">
-              {`${deckCards.filter((card) => card.deckId === deck.id).length} cards`}
-            </p>
+            <div className="d-flex justify-content-between align-items-start">
+              <h5 className="card-title">{deck.name}</h5>
+              <p className="text-end">
+                {`${deckCards.filter((card) => card.deckId === deck.id).length} cards`}
+              </p>
+            </div>
+            <p className="card-text">{deck.description}</p>
             <Link
               to={`/decks/${deck.id}/study`}
               className="btn btn-primary"
