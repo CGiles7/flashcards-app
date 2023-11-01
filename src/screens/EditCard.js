@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import { readCard, updateCard } from "../utils/api";
-import Header from "../Layout/Header";
 
-function EditCard({ deckId }) {
+function EditCard() {
+  const { deckId } = useParams();
   const { cardId } = useParams();
   const history = useHistory();
   const [card, setCard] = useState({ front: "", back: "" });
@@ -26,7 +26,7 @@ function EditCard({ deckId }) {
     setCard((prevCard) => ({ ...prevCard, [name]: value }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
 
     try {
@@ -37,13 +37,12 @@ function EditCard({ deckId }) {
     }
   };
 
-  const handleDone = () => {
+  const handleCancel = () => {
     history.push(`/decks/${deckId}`);
   };
 
   return (
     <div>
-      <Header />
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
@@ -61,7 +60,7 @@ function EditCard({ deckId }) {
         </ol>
       </nav>
       <h1>Edit Card</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSave}>
         <div className="mb-3">
           <label htmlFor="front" className="form-label">
             Front
@@ -94,9 +93,9 @@ function EditCard({ deckId }) {
         <button
           type="button"
           className="btn btn-secondary ml-2"
-          onClick={handleDone}
+          onClick={handleCancel}
         >
-          Done
+          Cancel
         </button>
       </form>
     </div>
