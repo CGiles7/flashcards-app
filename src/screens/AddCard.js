@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory, Link } from "react-router-dom";
 import { readDeck, createCard } from "../utils/api";
-import Header from "../Layout/Header";
 
 function AddCard({ decks, updateDeck }) {
   const { deckId } = useParams();
@@ -59,7 +58,6 @@ function AddCard({ decks, updateDeck }) {
 
   return (
     <div>
-      <Header />
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
