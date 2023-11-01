@@ -40,7 +40,7 @@ function Home() {
 
   return (
     <div>
-      <Link to="/decks/new" className="btn btn-primary">
+      <Link to="/decks/new" className="btn btn-secondary">
         Create Deck
       </Link>
       <DeckList decks={decks} deckCards={deckCards} onDeleteDeck={handleDeleteDeck} setSelectedDeck={setSelectedDeck} />
