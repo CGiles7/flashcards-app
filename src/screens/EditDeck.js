@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
 import { readDeck, updateDeck } from "../utils/api";
 
 function EditDeck() {
   const { deckId } = useParams();
+  const history = useHistory();
   const [deck, setDeck] = useState(null);
   const [updatedName, setUpdatedName] = useState("");
   const [updatedDescription, setUpdatedDescription] = useState("");
@@ -23,6 +24,7 @@ function EditDeck() {
     updateDeck({ ...deck, name: updatedName, description: updatedDescription }).then(
       (updatedDeck) => {
         // Handle the updated deck, e.g., navigate to its view page
+        history.push(`/decks/${updatedDeck.id}`);
       }
     );
   };
@@ -31,6 +33,19 @@ function EditDeck() {
     <div>
       {deck && (
         <div>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <Link to="/">Home</Link>
+              </li>
+              <li className="breadcrumb-item">
+                <Link to={`/decks/${deck.id}`}>{deck.name}</Link>
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                Edit Deck
+              </li>
+            </ol>
+          </nav>
           <h2>Edit Deck</h2>
           <form onSubmit={handleSubmit}>
             <div>
@@ -48,7 +63,12 @@ function EditDeck() {
                 onChange={(e) => setUpdatedDescription(e.target.value)}
               />
             </div>
-            <button type="submit">Save</button>
+            <button type="submit" className="btn btn-primary">
+              Save
+            </button>
+            <Link to={`/decks/${deck.id}`} className="btn btn-secondary">
+              Cancel
+            </Link>
           </form>
         </div>
       )}
