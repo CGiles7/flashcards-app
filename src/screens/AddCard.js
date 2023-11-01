@@ -82,6 +82,7 @@ function AddCard({ decks, updateDeck }) {
             id="front"
             name="front"
             value={card.front}
+            placeholder='Front side of card'
             onChange={handleInputChange}
             required
           />
@@ -95,6 +96,7 @@ function AddCard({ decks, updateDeck }) {
             id="back"
             name="back"
             value={card.back}
+            placeholder='Back side of card'
             onChange={handleInputChange}
             required
           />
