@@ -53,6 +53,18 @@
       "back": "b",
       "deckId": 1,
       "id": 7
+    },
+    {
+      "front": "front side",
+      "back": "back side",
+      "deckId": 3,
+      "id": 8
+    },
+    {
+      "front": "another front side",
+      "back": "another back side",
+      "deckId": 3,
+      "id": 9
     }
   ]
 }

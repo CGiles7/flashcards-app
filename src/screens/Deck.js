@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
-import { readDeck, deleteDeck } from "../utils/api";
-import CardsList from "./CardsList"; // Import the CardsList component
+import { readDeck, deleteDeck, deleteCard } from "../utils/api/index";
+import CardsList from "./CardsList";
 
 function Deck() {
   const { deckId } = useParams();
@@ -32,6 +32,23 @@ function Deck() {
     }
   };
 
+  const handleDeleteCard = async (cardId) => {
+    if (window.confirm('Are you sure you want to delete this card?')) {
+      try {
+        // Call the deleteCard function and update the cards state
+        // You can use setDeck here to update the deck state
+        await deleteCard(cardId); // Implement the deleteCard function
+        // Update the cards state (you should have a state for cards in the Deck component)
+        setDeck((prevDeck) => {
+          const updatedCards = prevDeck.cards.filter((card) => card.id !== cardId);
+          return { ...prevDeck, cards: updatedCards };
+        });
+      } catch (error) {
+        console.error('Error deleting card: ' + error.message);
+      }
+    }
+  };
+
   return (
     <div>
       <nav aria-label="breadcrumb">
@@ -51,7 +68,6 @@ function Deck() {
         <div className="deck-details">
           <h2>{deck.name}</h2>
           <p>{deck.description}</p>
-          {/* Additional deck details can be added here */}
           <Link to={`/decks/${deck.id}/edit`} className="btn btn-secondary">
             Edit
           </Link>
@@ -67,8 +83,7 @@ function Deck() {
         </div>
       )}
 
-      {/* Render the CardsList component under the deck details */}
-      {deck && <CardsList decks={[deck]} cards={deck.cards} />}
+      <CardsList deck={deck} handleDeleteCard={handleDeleteCard} />
     </div>
   );
 }

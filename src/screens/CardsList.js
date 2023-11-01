@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function CardsList({ decks, cards }) {
+function CardsList({ decks, cards, handleDeleteCard }) {
+  // Check if 'cards' is defined, and if not, return null
+  if (!cards) {
+    return null;
+  }
+
   // Create a map to organize cards by deckId
   const cardsByDeck = cards.reduce((result, card) => {
     const { deckId } = card;
@@ -32,12 +37,18 @@ function CardsList({ decks, cards }) {
                     </div>
                     <div className="row mt-2">
                       <div className="col-6">
-                        <Link to={`/decks/${deck.id}/cards/${card.id}/edit`} className="btn btn-secondary">
+                        <Link
+                          to={`/decks/${deck.id}/cards/${card.id}/edit`}
+                          className="btn btn-secondary"
+                        >
                           Edit
                         </Link>
                       </div>
                       <div className="col-6">
-                        <button className="btn btn-danger">
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => handleDeleteCard(card.id)}
+                        >
                           Delete
                         </button>
                       </div>
