@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import { readDeck, deleteDeck } from "../utils/api";
+import CardsList from "./CardsList"; // Import the CardsList component
 
 function Deck() {
   const { deckId } = useParams();
@@ -65,6 +66,9 @@ function Deck() {
           </button>
         </div>
       )}
+
+      {/* Render the CardsList component under the deck details */}
+      {deck && <CardsList decks={[deck]} cards={deck.cards} />}
     </div>
   );
 }
