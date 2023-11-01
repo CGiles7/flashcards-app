@@ -35,10 +35,7 @@ function Deck() {
   const handleDeleteCard = async (cardId) => {
     if (window.confirm('Are you sure you want to delete this card?')) {
       try {
-        // Call the deleteCard function and update the cards state
-        // You can use setDeck here to update the deck state
-        await deleteCard(cardId); // Implement the deleteCard function
-        // Update the cards state (you should have a state for cards in the Deck component)
+        await deleteCard(cardId);
         setDeck((prevDeck) => {
           const updatedCards = prevDeck.cards.filter((card) => card.id !== cardId);
           return { ...prevDeck, cards: updatedCards };
@@ -82,8 +79,7 @@ function Deck() {
           </button>
         </div>
       )}
-
-      <CardsList deck={deck} handleDeleteCard={handleDeleteCard} />
+      <CardsList decks={[deck]} cards={deck.cards} handleDeleteCard={handleDeleteCard} />
     </div>
   );
 }
