@@ -5,8 +5,10 @@ import { readCard, updateCard } from "../utils/api";
 function EditCard() {
   const { deckId } = useParams();
   const { cardId } = useParams();
+  const [deck, setDeck] = useState();
   const history = useHistory();
   const [card, setCard] = useState({ front: "", back: "" });
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     async function loadCard() {
@@ -30,7 +32,7 @@ function EditCard() {
     event.preventDefault();
 
     try {
-      await updateCard(card);
+      await updateCard({ ...card, id: cardId });
       history.push(`/decks/${deckId}`);
     } catch (error) {
       console.error(error);
@@ -39,6 +41,19 @@ function EditCard() {
 
   const handleCancel = () => {
     history.push(`/decks/${deckId}`);
+  };  
+
+  const handleDeleteCard = () => {
+    // Implement deletion of the last card added to the deck
+    // This is a basic example and may need to be adjusted based on your data structure
+    if (deckId && deckId !== "") {
+      // Replace this logic with your actual data manipulation
+      const updatedDeck = { ...deck, cards: deck.cards - 1 };
+      setDeck(updatedDeck);
+    }
+
+    // Redirect the user to the AddCard screen
+    history.push(`/decks/${deckId}/cards/new`);
   };
 
   return (
@@ -98,6 +113,20 @@ function EditCard() {
           Cancel
         </button>
       </form>
+
+      {showDeleteConfirmation && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>Are you sure you want to cancel editing this card?</p>
+            <button className="btn btn-danger" onClick={handleDeleteCard}>
+              Yes, Cancel
+            </button>
+            <button className="btn btn-secondary" onClick={() => setShowDeleteConfirmation(false)}>
+              No, Continue Editing
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

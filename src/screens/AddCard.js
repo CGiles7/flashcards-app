@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { readDeck, createCard } from "../utils/api";
 
@@ -41,12 +41,12 @@ function AddCard({ decks, updateDeck }) {
     try {
       await createCard(deckId, card);
       const updatedDeck = { ...deck, cards: deck.cards + 1 };
-      updateDeck(updatedDeck);
-      setCard(initialCard);
+      setCard(initialCard); // Clear the form
     } catch (error) {
       console.error(error);
     }
   };
+   
 
   const handleDone = () => {
     history.push(`/decks/${deckId}`);

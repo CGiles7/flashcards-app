@@ -79,7 +79,9 @@ function Deck() {
           </button>
         </div>
       )}
-      <CardsList decks={[deck]} cards={deck.cards} handleDeleteCard={handleDeleteCard} />
+      {deck && deck.cards && (
+        <CardsList decks={[deck]} cards={deck.cards} handleDeleteCard={handleDeleteCard} />
+      )}
     </div>
   );
 }
