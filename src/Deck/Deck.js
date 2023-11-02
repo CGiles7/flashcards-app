@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import { readDeck, deleteDeck, deleteCard } from "../utils/api/index";
-import CardsList from "./CardsList";
+import CardsList from "../Card/CardsList";
 
 function Deck() {
   const { deckId } = useParams();

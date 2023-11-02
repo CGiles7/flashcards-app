@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import DeckList from "./DeckList";
+import DeckList from "../Deck/DeckList";
 import { listDecks, deleteDeck } from "../utils/api"; // Import the deleteDeck function
 
 function Home() {
