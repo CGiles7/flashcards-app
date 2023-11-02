@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { readDeck, createCard } from "../utils/api";
+import Form from '../Layout/Form';
 
-function AddCard({ decks, updateDeck }) {
+function AddCard() {
   const { deckId } = useParams();
   const history = useHistory();
   const initialCard = { front: "", back: "" };
@@ -46,7 +47,6 @@ function AddCard({ decks, updateDeck }) {
       console.error(error);
     }
   };
-   
 
   const handleDone = () => {
     history.push(`/decks/${deckId}`);
@@ -72,46 +72,12 @@ function AddCard({ decks, updateDeck }) {
         </ol>
       </nav>
       <h1>Add Card</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="front" className="form-label">
-            Front
-          </label>
-          <textarea
-            className="form-control"
-            id="front"
-            name="front"
-            value={card.front}
-            placeholder='Front side of card'
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="back" className="form-label">
-            Back
-          </label>
-          <textarea
-            className="form-control"
-            id="back"
-            name="back"
-            value={card.back}
-            placeholder='Back side of card'
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Save
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary ml-2"
-          onClick={handleDone}
-        >
-          Done
-        </button>
-      </form>
+      <Form
+        card={card}
+        onInputChange={handleInputChange}
+        onSubmit={handleSubmit}
+        onCancel={handleDone}
+      />
     </div>
   );
 }
