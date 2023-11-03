@@ -7,6 +7,9 @@ function CardsList({ decks, cards, handleDeleteCard }) {
     return null;
   }
 
+console.log("Decks in CardsList:", decks);
+console.log("Cards in CardsList:", cards);
+
   // Create a map to organize cards by deckId
   const cardsByDeck = cards.reduce((result, card) => {
     const { deckId } = card;
@@ -16,6 +19,10 @@ function CardsList({ decks, cards, handleDeleteCard }) {
     result[deckId].push(card);
     return result;
   }, {});
+
+  // const getCardFront = (card) => {
+  //   return <span>{card.front}</span>;
+  // }
 
   return (
     <div>
@@ -29,7 +36,7 @@ function CardsList({ decks, cards, handleDeleteCard }) {
                   <li key={card.id} className="list-group-item">
                     <div className="row">
                       <div className="col-6">
-                        <strong>Front:</strong> {card.front}
+                        <strong>Front:</strong><Text>{card.front}</Text>
                       </div>
                       <div className="col-6">
                         <strong>Back:</strong> {card.back}
@@ -65,5 +72,6 @@ function CardsList({ decks, cards, handleDeleteCard }) {
     </div>
   );
 }
+
 
 export default CardsList;
