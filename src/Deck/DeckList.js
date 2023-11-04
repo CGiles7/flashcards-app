@@ -1,55 +1,89 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { listDecks } from "../utils/api"; // Import the listDecks function
+import React, { useState, useEffect } from "react";
+import { Link, useParams, useHistory } from "react-router-dom";
+import { readDeck, deleteDeck, deleteCard } from "../utils/api/index";
+import CardsList from "../Card/CardsList";
 
-function DeckList({ onDeleteDeck, setSelectedDeck, deckCards }) {
-  const [decks, setDecks] = useState([]);
+function Deck() {
+  const { deckId } = useParams();
+  const history = useHistory();
+  const [deck, setDeck] = useState(null);
 
   useEffect(() => {
-    const abortController = new AbortController();
+    async function loadDeck() {
+      try {
+        const loadedDeck = await readDeck(deckId);
+        setDeck(loadedDeck);
+      } catch (error) {
+        console.log('Error loading deck: ' + error.message);
+      }
+    }
 
-    // Fetch the decks from the API
-    listDecks(abortController.signal)
-      .then((decks) => setDecks(decks))
-      .catch((error) => console.error("Error fetching decks: " + error.message));
+    loadDeck();
+  }, [deckId]);
 
-    // Cleanup the controller when the component unmounts
-    return () => abortController.abort();
-  }, []);
+  const handleDeleteDeck = async () => {
+    if (window.confirm('Are you sure you want to delete this deck?')) {
+      try {
+        await deleteDeck(deckId);
+        history.push('/');
+      } catch (error) {
+        console.log('Error deleting deck: ' + error.message);
+      }
+    }
+  };
+
+  const handleDeleteCard = async (cardId) => {
+    if (window.confirm('Are you sure you want to delete this card?')) {
+      try {
+        await deleteCard(cardId);
+        setDeck((prevDeck) => {
+          const updatedCards = prevDeck.cards.filter((card) => card.id !== cardId);
+          return { ...prevDeck, cards: updatedCards };
+        });
+      } catch (error) {
+        console.error('Error deleting card: ' + error.message);
+      }
+    }
+  };
 
   return (
-    <div className="mt-4">
-      {decks.map((deck) => (
-        <div className="card" key={deck.id}>
-          <div className="card-body">
-            <div className="d-flex justify-content-between align-items-start">
-              <h5 className="card-title">{deck.name}</h5>
-              <p className="text-end">
-                {`${deckCards.filter((card) => card.deckId === deck.id).length} cards`}
-              </p>
-            </div>
-            <p className="card-text">{deck.description}</p>
-            <Link
-              to={`/decks/${deck.id}/study`}
-              className="btn btn-primary"
-              onClick={() => setSelectedDeck(deck)}
-            >
-              Study
-            </Link>
-            <Link to={`/decks/${deck.id}`} className="btn btn-secondary">
-              View
-            </Link>
-            <button
-              className="btn btn-danger"
-              onClick={() => onDeleteDeck(deck.id)}
-            >
-              Delete
-            </button>
-          </div>
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link to="/">Home</Link>
+          </li>
+          {deck && (
+            <li className="breadcrumb-item">
+              {deck.name}
+            </li>
+          )}
+        </ol>
+      </nav>
+
+      {deck && (
+        <div className="deck-details">
+          <h2>{deck.name}</h2>
+          <p>{deck.description}</p>
+          <Link to={`/decks/${deck.id}/edit`} className="btn btn-secondary">
+            Edit
+          </Link>
+          <Link to={`/decks/${deck.id}/study`} className="btn btn-primary">
+            Study
+          </Link>
+          <Link to={`/decks/${deck.id}/cards/new`} className="btn btn-primary">
+            Add Cards
+          </Link>
+          <button className="btn btn-danger" onClick={handleDeleteDeck}>
+            Delete
+          </button>
         </div>
-      ))}
+      )}
+      {deck && deck.cards && (
+        <CardsList decks={[deck]} cards={deck.cards} handleDeleteCard={handleDeleteCard} />
+      )}
     </div>
   );
 }
 
-export default DeckList;
+export default Deck;

@@ -27,23 +27,16 @@ function Home() {
   const handleDeleteDeck = async (deckId) => {
     if (window.confirm("Are you sure you want to delete this deck?")) {
       try {
-        // Call the deleteDeck function and update the decks state after deletion
+        // Call the deleteDeck function and update the decks state
         await deleteDeck(deckId);
-        
-        // Filter the decks to remove the deleted deck
         setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId));
-        
-        // Update deckCards by reducing the cards from remaining decks
-        const updatedDeckCards = decks
-          .filter((deck) => deck.id !== deckId)
-          .reduce((cards, deck) => cards.concat(deck.cards), []);
-        
-        setDeckCards(updatedDeckCards);
+        const allCards = decks.reduce((cards, deck) => cards.concat(deck.cards), []);
+        setDeckCards(allCards);
       } catch (error) {
         console.error("Error deleting deck: " + error.message);
       }
     }
-  };  
+  };
 
   return (
     <div>

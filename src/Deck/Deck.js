@@ -12,15 +12,14 @@ function Deck() {
     async function loadDeck() {
       try {
         const loadedDeck = await readDeck(deckId);
-    ;    console.log("Loaded Deck:", loadedDeck); // Add this line
         setDeck(loadedDeck);
       } catch (error) {
-        console.log("Error loading deck:", error.message);
+        console.log('Error loading deck: ' + error.message);
       }
     }
 
     loadDeck();
-  }, [deckId])
+  }, [deckId]);
 
   const handleDeleteDeck = async () => {
     if (window.confirm('Are you sure you want to delete this deck?')) {
@@ -28,10 +27,10 @@ function Deck() {
         await deleteDeck(deckId);
         history.push('/');
       } catch (error) {
-        console.log("Error deleting deck:", error.message);
+        console.log('Error deleting deck: ' + error.message);
       }
     }
-  }
+  };
 
   const handleDeleteCard = async (cardId) => {
     if (window.confirm('Are you sure you want to delete this card?')) {
@@ -47,7 +46,6 @@ function Deck() {
     }
   };
 
-
   return (
     <div>
       <nav aria-label="breadcrumb">
@@ -62,7 +60,7 @@ function Deck() {
           )}
         </ol>
       </nav>
-  
+
       {deck && (
         <div className="deck-details">
           <h2>{deck.name}</h2>
@@ -81,14 +79,11 @@ function Deck() {
           </button>
         </div>
       )}
-      {deck && deck.cards && deck.cards.length > 0 && (
+      {deck && deck.cards && (
         <CardsList decks={[deck]} cards={deck.cards} handleDeleteCard={handleDeleteCard} />
       )}
-      {deck && deck.cards && deck.cards.length === 0 && (
-        <p>No cards available for this deck.</p>
-      )}
     </div>
-  );  
+  );
 }
 
 export default Deck;
