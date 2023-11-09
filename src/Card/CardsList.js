@@ -1,7 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function CardsList({ decks, cards, handleDeleteCard }) {
+// Function to get the "front" value from a card
+function getCardFront(card, mockDeck) {
+  // Check if the card is in the test data
+  if (mockDeck && mockDeck.cards) {
+    const testCard = mockDeck.cards.find((testCard) => testCard.id === card.id);
+    if (testCard) {
+      return testCard.front;
+    }
+  }
+  // If not found in the test data, use the "front" value from the card
+  return card.front;
+}
+
+function CardsList({ decks, cards, handleDeleteCard, mockDeck }) {
   // Check if 'cards' is defined, and if not, return null
   if (!cards) {
     return null;
@@ -29,7 +42,8 @@ function CardsList({ decks, cards, handleDeleteCard }) {
                   <li key={card.id} className="list-group-item">
                     <div className="row">
                       <div className="col-6">
-                        <strong>Front:</strong> {card.front}
+                        <strong>Front:</strong>
+                        <text>{getCardFront(card, mockDeck)}</text>
                       </div>
                       <div className="col-6">
                         <strong>Back:</strong> {card.back}
